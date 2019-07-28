@@ -2,10 +2,32 @@ const products = require('./api/routes/products');
 const orders = require('./api/routes/orders');
 const express = require('express');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
 const app = express();
 
 app.use(morgan('dev'));
 app.use(express.json());
+
+mongoose.connect('mongodb+srv://rest-shopkeeper:83xJbMQq8blf2F0S@rest-shop-lwh6s.mongodb.net/test?retryWrites=true&w=majority', {useNewUrlParser : true})
+   .then(()=> console.log('connected to mongodb'))
+   .catch(err => {
+      console.log(err);
+   });
+
+// Enable CORS
+app.use((req, res, next) => {
+   res.header('Access-Control-Allow-Origin', '*');
+   res.header(
+      'Access-Control-Allow-Headers', 
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+   );
+   if(req.method === 'OPTIONS'){
+      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+      return res.status(200).json({});
+   }
+   next();
+})
+
 
 app.get('/', (req, res)=>{
    //res.send('Welcome to the Shop');
