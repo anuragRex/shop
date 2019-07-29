@@ -8,7 +8,7 @@ const app = express();
 app.use(morgan('dev'));
 app.use(express.json());
 
-mongoose.connect('mongodb+srv://rest-shopkeeper:83xJbMQq8blf2F0S@rest-shop-lwh6s.mongodb.net/test?retryWrites=true&w=majority', {useNewUrlParser : true})
+mongoose.connect(`mongodb+srv://rest-shopkeeper:${process.env.MONGO_ATLAS_PASWD}@rest-shop-lwh6s.mongodb.net/shop?retryWrites=true&w=majority`, {useNewUrlParser : true})
    .then(()=> console.log('connected to mongodb'))
    .catch(err => {
       console.log(err);
