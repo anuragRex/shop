@@ -1,5 +1,6 @@
 {
     "env" : {
-        "MONGO_ATLAS_PASWD" : "83xJbMQq8blf2F0S"
+        "MONGO_ATLAS_PASWD" : "83xJbMQq8blf2F0S",
+        "JWT_PRIVATE_KEY" : "super_Secret_Key"
     }
 }

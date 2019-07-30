@@ -1,5 +1,6 @@
 const products = require('./api/routes/products');
 const orders = require('./api/routes/orders');
+const users = require('./api/routes/users');
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
@@ -7,6 +8,7 @@ const app = express();
 
 app.use(morgan('dev'));
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 
 mongoose.connect(`mongodb+srv://rest-shopkeeper:${process.env.MONGO_ATLAS_PASWD}@rest-shop-lwh6s.mongodb.net/shop?retryWrites=true&w=majority`, {useNewUrlParser : true})
    .then(()=> console.log('connected to mongodb'))
@@ -36,6 +38,7 @@ app.get('/', (req, res)=>{
 
 app.use('/products', products);
 app.use('/orders', orders);
+app.use('/user', users);
 
 // Handling Unsupported Routes Error
 
