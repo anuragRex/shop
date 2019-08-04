@@ -4,6 +4,11 @@ const mongoose = require('mongoose');
 const Product = require('../models/product');
 const multer = require('multer');
 const auth = require('../middlewares/check-auth');
+const { 
+   products_get_all, 
+   products_get_one,
+   products_delete_product 
+} = require('../controllers/products');
 
 const storage = multer.diskStorage({
    destination : function(req, file, callback){
@@ -36,45 +41,9 @@ const upload = multer({
 
 // GET ROUTES
 
-router.get('/', (req, res, next)=>{
-   Product.find()
-      .select('-__v')
-      .then(docs => {
-         const response = {
-            count : docs.length,
-            products : docs
-         }
-         res.json(response);
-      })
-      .catch(err => {
-         res.status(500).json({
-            message : "something went wrong",
-            error : `${err.name} : ${err.message}`
-         });
-      });
-});
+router.get('/', products_get_all);
 
-router.get('/:id', (req, res, next)=>{
-   const id = req.params.id;
-   Product.findById(id)
-      .then(doc => {
-         if(doc){
-            res.json({
-               message : "Product found",
-               product : doc
-            });
-         }
-         res.status(404).json({
-            message : "Product Not Found",
-         });
-      })
-      .catch(err => {
-         res.status(500).json({
-            message : "something went wrong",
-            error : `${err.name} : ${err.message}`
-         });
-      })
-});
+router.get('/:id', products_get_one);
 
 
 // POST ROUTE
@@ -101,7 +70,7 @@ router.post('/', [auth, upload.single('productImage')], (req, res, next)=>{
 });
 
 // PATCH ROUTE
-router.patch('/:id', (req, res, next)=>{
+router.patch('/:id', auth, (req, res, next)=>{
    const id = req.params.id;
    const updateProps = {};
    for(const property of req.body){
@@ -128,21 +97,6 @@ router.patch('/:id', (req, res, next)=>{
 
 // DELETE ROUTE
 
-router.delete('/:id', (req, res, next)=>{
-   Product.deleteOne({ _id : req.params.id})
-      .then(result => {
-         if(result.deletedCount === 1){
-            res.json({
-               result : "product deleted"
-            });
-         }
-      })
-      .catch(err => {
-         res.status(500).json({
-            message : "something went wrong",
-            error : `${err.name} : ${err.message}`
-         });
-      });
-});
+router.delete('/:id', auth, products_delete_product);
 
 module.exports = router;
